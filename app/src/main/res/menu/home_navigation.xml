@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/opt_budget"
+        android:title="@string/budget"
+        android:icon="@drawable/budget_ic"/>
+    <item
+        android:id="@+id/opt_expense"
+        android:title="@string/expense"
+        android:icon="@drawable/expense2_ic"/>
+    <item
+        android:id="@+id/opt_category"
+        android:title="@string/category"
+        android:icon="@drawable/category_ic"/>
+</menu>
