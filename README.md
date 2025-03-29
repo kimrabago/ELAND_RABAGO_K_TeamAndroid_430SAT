@@ -21,5 +21,5 @@ A user-friendly mobile application designed to help users effectively monitor an
 
 ## Documentation
 
-[EXTR Documentation](https://docs.google.com/document/d/1G1vMD0yH-adgmwSyQPXsR2K8EfOQ4ZbfyORCglyV9XY/edit?usp=sharing)
+[FinanceX Documentation](https://docs.google.com/document/d/1G1vMD0yH-adgmwSyQPXsR2K8EfOQ4ZbfyORCglyV9XY/edit?usp=sharing)
 
