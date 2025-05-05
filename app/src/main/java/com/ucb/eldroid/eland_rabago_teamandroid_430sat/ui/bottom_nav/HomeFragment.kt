@@ -17,6 +17,8 @@ import com.ucb.eldroid.eland_rabago_teamandroid_430sat.data.model.CategoryItem
 import com.ucb.eldroid.eland_rabago_teamandroid_430sat.ui.adapter.CategoryExpenseAdapter
 import com.ucb.eldroid.eland_rabago_teamandroid_430sat.ui.adapter.ExpenseAdapter
 import com.ucb.eldroid.eland_rabago_teamandroid_430sat.ui.budgetplan.BudgetPlanningFragment
+import com.ucb.eldroid.eland_rabago_teamandroid_430sat.ui.exp_and_cat.CategoryFragment
+import com.ucb.eldroid.eland_rabago_teamandroid_430sat.ui.exp_and_cat.ExpenseFragment
 
 class HomeFragment : Fragment() {
 
