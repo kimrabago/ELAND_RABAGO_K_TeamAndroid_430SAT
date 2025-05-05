@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "14318554486",
+    "project_id": "teamandroid-authentication",
+    "storage_bucket": "teamandroid-authentication.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:14318554486:android:a6ab2fadf5b4dc7e49fe57",
+        "android_client_info": {
+          "package_name": "com.ucb.eldroid.eland_rabago_teamandroid_430sat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR3zMnJkfRKUDicu0jz7aNDCGEIth3tBU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
