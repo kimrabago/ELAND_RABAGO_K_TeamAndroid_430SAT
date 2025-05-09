@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ucb.eldroid.eland_rabago_teamandroid_430sat.R
 import com.ucb.eldroid.eland_rabago_teamandroid_430sat.data.model.CategoryItem
 
-class CategoryAdapter(private val categories: List<CategoryItem>) :
+class CategoryAdapter(private var categories: List<CategoryItem>) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -26,4 +26,9 @@ class CategoryAdapter(private val categories: List<CategoryItem>) :
     }
 
     override fun getItemCount(): Int = categories.size
+
+    fun updateList(newList: List<CategoryItem>) {
+        categories = newList
+        notifyDataSetChanged()
+    }
 }

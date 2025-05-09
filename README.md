@@ -1,4 +1,4 @@
-# FinanceX
+ # FinanceX
 
 A user-friendly mobile application designed to help users effectively monitor and manage their personal finances by recording income, tracking expenses, and providing detailed reports to enhance budgeting and financial decision-making.
 
@@ -13,9 +13,13 @@ A user-friendly mobile application designed to help users effectively monitor an
 
 ## Android Repository Link
 
-[Android Repository](https://github.com/kimrabago/ELAND_RABAGO_TEAMANDROID_430SAT)
+[Android Repository](https://github.com/kimrabago/ELAND_RABAGO_K_TeamAndroid_430SAT.git)
 
 ## Documentation
 
-[FinanceX Documentation](https://docs.google.com/document/d/1G1vMD0yH-adgmwSyQPXsR2K8EfOQ4ZbfyORCglyV9XY/edit?usp=sharing)
+[FinanceX Rabago Documentation](https://docs.google.com/document/d/1G1vMD0yH-adgmwSyQPXsR2K8EfOQ4ZbfyORCglyV9XY/edit?usp=sharing)
+
+## Testcases Docummentation
+
+[Testcases Documentation](https://docs.google.com/document/d/1hTTfI_UbwcdUAne6QH02zN5JhOytPNGqrSix7qG50To/edit?usp=sharing)
 

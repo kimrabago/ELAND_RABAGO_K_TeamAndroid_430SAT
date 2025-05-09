@@ -12,9 +12,12 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.ucb.eldroid.eland_rabago_teamandroid_430sat.R
 import com.ucb.eldroid.eland_rabago_teamandroid_430sat.data.locals.AppDatabaseHelper
+import com.ucb.eldroid.eland_rabago_teamandroid_430sat.viewmodel.exp_and_cat.ExpenseViewModel
 
 class ExpenseFragment : Fragment() {
     override fun onCreateView(
@@ -23,82 +26,75 @@ class ExpenseFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_expense, container, false)
     }
-    private lateinit var dbHelper: AppDatabaseHelper
-    private var selectedCategoryId: Int? = null
-    private var userId: Int? = null
+        private lateinit var viewModel: ExpenseViewModel
+        private lateinit var dbHelper: AppDatabaseHelper
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+            dbHelper = AppDatabaseHelper(requireContext())
 
-        dbHelper = AppDatabaseHelper(requireContext())
-        val categorySpinner = view.findViewById<Spinner>(R.id.expensecategoryspinner)
-        val addCatText = view.findViewById<TextView>(R.id.AddInitialCat)
-
-        val email = FirebaseAuth.getInstance().currentUser?.email ?: return
-        val localUser = dbHelper.getUserByEmail(email) ?: return
-        userId = localUser.userID
-
-        val categoryList = dbHelper.getCategoriesByUserId(userId!!)
-        if (categoryList.isNotEmpty()) {
-            categorySpinner.visibility = View.VISIBLE
-            addCatText.visibility = View.GONE
-
-            val categoryNames = categoryList.map { it["itemName"] ?: "Unnamed" }
-            val adapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                categoryNames
-            )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            categorySpinner.adapter = adapter
-
-            categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                    selectedCategoryId = categoryList[position]["itemID"]?.toIntOrNull()
+            val factory = object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return ExpenseViewModel(dbHelper) as T
                 }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {}
             }
-        } else {
-            categorySpinner.visibility = View.GONE
-            addCatText.visibility = View.VISIBLE
-        }
+            viewModel = ViewModelProvider(this, factory)[ExpenseViewModel::class.java]
 
-        view.findViewById<Button>(R.id.expensesubmitbutton).setOnClickListener {
-            submitExpense()
+            val email = FirebaseAuth.getInstance().currentUser?.email ?: return
+            viewModel.loadCategories(email)
+
+            val categorySpinner = view.findViewById<Spinner>(R.id.expensecategoryspinner)
+            val addCatText = view.findViewById<TextView>(R.id.AddInitialCat)
+
+            viewModel.categoryList.observe(viewLifecycleOwner) { categories ->
+                if (categories.isNotEmpty()) {
+                    categorySpinner.visibility = View.VISIBLE
+                    addCatText.visibility = View.GONE
+
+                    val categoryNames = categories.map { it["itemName"] ?: "Unnamed" }
+                    val adapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        categoryNames
+                    )
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    categorySpinner.adapter = adapter
+
+                    categorySpinner.onItemSelectedListener =
+                        object : AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                viewModel.selectedCategoryId =
+                                    categories[position]["itemID"]?.toIntOrNull()
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>) {}
+                        }
+                } else {
+                    categorySpinner.visibility = View.GONE
+                    addCatText.visibility = View.VISIBLE
+                }
+            }
+
+            view.findViewById<Button>(R.id.expensesubmitbutton).setOnClickListener {
+                val name = view.findViewById<EditText>(R.id.expensenameedittext).text.toString()
+                val amount = view.findViewById<EditText>(R.id.expenseamountedittext).text.toString()
+                val desc = view.findViewById<EditText>(R.id.expensedescedittext).text.toString()
+
+                viewModel.submitExpense(name, amount, desc)
+            }
+
+            viewModel.expenseSaved.observe(viewLifecycleOwner) { saved ->
+                Toast.makeText(
+                    context,
+                    if (saved) getString(R.string.expense_saved)
+                    else getString(R.string.error_saving_expense),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
-    private fun submitExpense() {
-        val name = view?.findViewById<EditText>(R.id.expensenameedittext)?.text.toString().trim()
-        val amountText = view?.findViewById<EditText>(R.id.expenseamountedittext)?.text.toString().trim()
-        val desc = view?.findViewById<EditText>(R.id.expensedescedittext)?.text.toString().trim()
-        val categoryId = selectedCategoryId
-
-        if (name.isEmpty() || amountText.isEmpty() || categoryId == null) {
-            Toast.makeText(context, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val amount = amountText.toIntOrNull()
-        if (amount == null) {
-            Toast.makeText(context, getString(R.string.invalid_amount), Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val uid = userId ?: return
-        val success = dbHelper.insertExpense(
-            expenseName = name,
-            expenseAmount = amount,
-            expenseDesc = desc,
-            userId = uid,
-            itemId = categoryId
-        )
-
-        if (success) {
-            Toast.makeText(context, getString(R.string.expense_saved), Toast.LENGTH_SHORT).show()
-            // optionally clear form or navigate
-        } else {
-            Toast.makeText(context, getString(R.string.error_saving_expense), Toast.LENGTH_SHORT).show()
-        }
-    }
-}
